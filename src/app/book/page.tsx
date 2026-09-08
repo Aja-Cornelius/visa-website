@@ -8,14 +8,7 @@ export const metadata = {
   description: 'Book a professional visa consultation with an experienced visa manager. Tell us about your travel plans and get expert guidance.',
 };
 
-function BookingFormWrapper({ searchParams }: { searchParams?: { destination?: string } }) {
-  const dest = searchParams?.destination || '';
-  return <BookingForm initialDestination={dest} />;
-}
-
-export default async function BookPage(props: { searchParams: Promise<{ destination?: string }> }) {
-  const searchParams = await props.searchParams;
-
+export default function BookPage() {
   return (
     <main className="pt-28 pb-20 bg-slate-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -34,7 +27,7 @@ export default async function BookPage(props: { searchParams: Promise<{ destinat
             <p className="text-sm font-medium text-slate-600">Loading booking form...</p>
           </div>
         }>
-          <BookingFormWrapper searchParams={searchParams} />
+          <BookingForm />
         </Suspense>
 
         {/* Embassy Disclaimer */}

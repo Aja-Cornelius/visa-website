@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { User, Phone, Globe, MessageSquare, AlertCircle, ArrowRight, ShieldCheck } from 'lucide-react';
 import { BookingData, BookingFormState } from '@/types/booking';
 import { BookingSuccess } from './BookingSuccess';
@@ -11,6 +12,9 @@ interface BookingFormProps {
 }
 
 export function BookingForm({ initialDestination = '' }: BookingFormProps) {
+  const searchParams = useSearchParams();
+  const queryDest = searchParams.get('destination') || initialDestination;
+
   const [submittedBooking, setSubmittedBooking] = useState<BookingData | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -20,7 +24,7 @@ export function BookingForm({ initialDestination = '' }: BookingFormProps) {
     phone: '',
     email: '',
     countryOfResidence: '',
-    destination: initialDestination || 'United Kingdom',
+    destination: queryDest || 'United Kingdom',
     visaType: 'Tourist / Visitor Visa',
     consultationDate: '',
     preferredContactMethod: 'WhatsApp',
@@ -30,7 +34,7 @@ export function BookingForm({ initialDestination = '' }: BookingFormProps) {
   });
 
   useEffect(() => {
-    if (initialDestination) {
+    if (queryDest) {
       const formattedMap: Record<string, string> = {
         uk: 'United Kingdom',
         usa: 'United States',
@@ -41,7 +45,7 @@ export function BookingForm({ initialDestination = '' }: BookingFormProps) {
       };
       setFormData((prev) => ({
         ...prev,
-        destination: formattedMap[initialDestination.toLowerCase()] || initialDestination,
+        destination: formattedMap[queryDest.toLowerCase()] || queryDest,
       }));
     }
 
@@ -50,7 +54,7 @@ export function BookingForm({ initialDestination = '' }: BookingFormProps) {
     futureDate.setDate(futureDate.getDate() + 2);
     const dateStr = futureDate.toISOString().split('T')[0];
     setFormData((prev) => ({ ...prev, consultationDate: dateStr }));
-  }, [initialDestination]);
+  }, [queryDest]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
